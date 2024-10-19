@@ -1,12 +1,9 @@
-import axios from 'axios';
-import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import LinkTreePage from './pages/LinkTreePage';
 import EmailListPage from './pages/EmailListPage';
 import LinkPage from './pages/LinkPage';
-import handleLogout from './pages/Logout';
 import NotFoundPage from './pages/NotFoundPage';
 import HomePage from './pages/HomePage';
 
