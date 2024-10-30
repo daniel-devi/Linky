@@ -10,7 +10,7 @@ class LinkTree(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=True, unique=True)
 
     def __str__(self):
         return self.title

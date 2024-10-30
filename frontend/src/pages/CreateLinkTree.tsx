@@ -57,10 +57,28 @@ function CreateLinkTree() {
       );
       setLinks([...links, response.data]); // Add new link to the state
       setNewLink({ title: "", url: "" }); // Clear input fields
+
     } catch (error) {
       console.error("Error adding link:", error);
     }
+
   };
+
+  function copyAndOpenLink(text) {
+    // Copy the text to clipboard
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log("Text copied to clipboard:", text);
+      })
+      .catch((error) => {
+        console.error("Failed to copy text:", error);
+      });
+  
+    // Open the link in a new tab
+    window.open(text, "_blank");
+  }
+
+  console.log(uuid);
   return (
     <>
       <h1>Create Link Tree</h1>
@@ -78,8 +96,9 @@ function CreateLinkTree() {
         </button>{" "}
         <br />
       </form>
-      
-        {created  &&  <button type="submit">Share</button> }
+    
+    <br />
+      {created && <button type="submit" onClick={() => copyAndOpenLink(`http://localhost:5173/linktree/${uuid}`)}>Share</button>}
 
       {/* Display linkTree Name */}
 
@@ -97,7 +116,10 @@ function CreateLinkTree() {
       ) : links.length > 1 ? (
         <ul>
           {links.map((link) => (
-            <li key={link.id}>{link.title}</li>
+            <li key={link.id}>
+              {" "}
+              <a href={link.url}>{link.title}</a>
+            </li>
           ))}
         </ul>
       ) : (
