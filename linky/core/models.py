@@ -12,6 +12,9 @@ class LinkTree(models.Model):
     title = models.CharField(max_length=255)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
+    def __str__(self):
+        return self.title
+
 class Link(models.Model):
     """
     Represents a single link within a LinkTree.
@@ -20,9 +23,15 @@ class Link(models.Model):
     url = models.URLField()
     title = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.title
+
 class EmailList(models.Model):
     """
     Represents an email associated with a LinkTree, possibly for mailing list purposes.
     """
     linktree = models.ForeignKey(LinkTree, on_delete=models.CASCADE)
     email = models.EmailField()
+
+    def __str__(self):
+        return self.email

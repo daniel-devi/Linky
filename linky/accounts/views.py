@@ -2,7 +2,12 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from linky.core.serializers import UserSerializer
+from rest_framework.generics import ListAPIView
+from rest_framework import filters
+from rest_framework.permissions import IsAuthenticated
+from core.serializers import UserSerializer
+from .models import User
+
 
 # Create your views here.
 
@@ -46,13 +51,35 @@ class LogoutView(APIView):
     
         return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
 
-class EmailListViewSet(viewsets.ModelViewSet):
-    serializer_class = EmailListSerializer
-    queryset = EmailList.objects.all()
+class UserListView(ListAPIView):
+    serializer_class = UserSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['username', 'email']
+    ordering_fields = ['username', 'date_joined']
 
-    # Filter by LinkTree
     def get_queryset(self):
-        linktree_id = self.request.query_params.get('linktree')
-        if linktree_id:
-            return self.queryset.filter(linktree_id=linktree_id)
-        return self.queryset
+        queryset = User.objects.all()
+        
+        # Retrieve query parameters
+        username = self.request.query_params.get('username')
+        email = self.request.query_params.get('email')
+        is_staff = self.request.query_params.get('is_staff')
+        
+        # Apply filters if the parameters are provided
+        if username:
+            queryset = queryset.filter(username=username)
+        if email:
+            queryset = queryset.filter(email=email)
+        if is_staff is not None:  # Convert string to boolean
+            queryset = queryset.filter(is_staff=(is_staff.lower() == 'true'))
+        
+        return queryset
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # The user is available through the request.user attribute
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

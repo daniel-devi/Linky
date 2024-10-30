@@ -4,6 +4,9 @@ from .serializers import *
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -13,6 +16,7 @@ class LinkTreeViewSet(viewsets.ModelViewSet):
     """
     ViewSet for handling CRUD operations on LinkTree objects.
     """
+    permission_classes = []
     serializer_class = LinkTreeSerializer
     queryset = LinkTree.objects.all()
 
@@ -32,6 +36,29 @@ class LinkTreeViewSet(viewsets.ModelViewSet):
         links = linktree.link_set.all()
         serializer = LinkSerializer(links, many=True)
         return Response(serializer.data)
+    
+
+
+
+class LinkView(ListAPIView):
+    serializer_class = LinkSerializer
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['linktree',]
+    ordering_fields = ['id',]
+
+    def get_queryset(self):
+        queryset = Link.objects.all()
+        
+        # Retrieve query parameters
+        linktree = self.request.query_params.get('linktree')
+        
+        # Apply filters if the parameters are provided
+    
+        queryset = queryset.filter(linktree=linktree)
+        
+        
+        return queryset
+
 
 
 class LinkViewSet(viewsets.ModelViewSet):

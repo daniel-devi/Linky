@@ -22,6 +22,8 @@ urlpatterns = [
         'post': 'create'
     }), name='link-list'),
 
+path("get_links/", LinkView.as_view(), name="get_link_by_uuid"),
+
     path('links/<int:pk>/', LinkViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',
@@ -34,6 +36,8 @@ urlpatterns = [
         'get': 'list',
         'post': 'create'
     }), name='emaillist-list'),
+
+    # EmailList Objects endpoints
     path('emaillists/<int:pk>/', EmailListViewSet.as_view({
         'get': 'retrieve',
         'put': 'update',

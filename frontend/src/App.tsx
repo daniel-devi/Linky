@@ -6,6 +6,9 @@ import EmailListPage from './pages/EmailListPage';
 import LinkPage from './pages/LinkPage';
 import NotFoundPage from './pages/NotFoundPage';
 import HomePage from './pages/HomePage';
+import HandleLogout from './pages/Logout';
+import CreateLinkTree from './pages/CreateLinkTree';
+
 
 /**
  * App component
@@ -20,11 +23,11 @@ function App() {
                 {/* Define routes for different pages */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/logout" element={<handleLogout />} />
+                <Route path="/logout" element={<HandleLogout/>} />
                 <Route path="/email/:id" element={<EmailListPage />} />
                 <Route path="/linktree/:uuid" element={<LinkTreePage />} />
                 <Route path="/link/:uuid" element={<LinkPage />} />
-
+                <Route path="/linktree/create" element={<CreateLinkTree />} /> 
                 <Route path="/" element={<HomePage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>

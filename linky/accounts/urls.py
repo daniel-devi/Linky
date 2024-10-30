@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, LogoutView
+from .views import *
 
 # Define URL patterns for the accounts app
 urlpatterns = [
@@ -8,4 +8,12 @@ urlpatterns = [
     
     # URL pattern for user logout
     path('logout/', LogoutView.as_view(), name='logout'),
+
+    # URL getUsername Model
+    path('user', UserListView.as_view(), name='user'),
+
+    # URL pattern for user detail view
+    path('detail', UserDetailView.as_view(), name='user-detail'),
+
+
 ]

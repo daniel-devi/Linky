@@ -3,15 +3,17 @@
  * Removes the authentication token, displays a success message,
  * and redirects the user to the login page.
  */
-function handleLogout() {
-    // Remove the authentication token from local storage
-    localStorage.removeItem('token');
+function HandleLogout() {
+  // Remove the authentication token from local storage
+  localStorage.removeItem("token");
 
-    // Display a success message to the user
-    alert("Logged out successfully!");
+  // Display a success message to the user
+  alert("Logged out successfully!");
 
-    // Redirect the user to the login page
-    window.location.href = "/login";
+  // Redirect the user to the login page
+  window.location.href = "/login";
+
+  return <>Logout</>;
 }
 
-export default handleLogout;
+export default HandleLogout;

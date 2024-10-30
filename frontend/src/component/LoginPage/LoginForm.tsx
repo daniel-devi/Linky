@@ -2,9 +2,7 @@ import { useState } from "react";
 // Material UI components
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import CssBaseline from "@mui/material/CssBaseline";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Divider from "@mui/material/Divider";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -32,7 +30,7 @@ export default function SignIn() {
   // State hooks for email and password inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [username, setUsername] = useState("");
   /**
    * Opens the forgot password modal
    */
@@ -47,26 +45,67 @@ export default function SignIn() {
     setOpen(false);
   };
 
+  const getUsername = async (email: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/auth/user?${email}`
+      );
+      setUsername(response.data[0].username);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  /**
+   * Makes an API call to the get user details and store them on local storage
+   * @async
+   **/
+
+  const saveUserDetail = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/auth/detail", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log(response.data);
+      localStorage.setItem("UserName", response.data.username);
+      localStorage.setItem("UserId", response.data.id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   /**
    * Makes an API call to the login endpoint and logs in the user with correct credentials.
    * @async
    */
   const handleLogin = async () => {
     try {
+      getUsername(email);
       // Send login request to the API
       const response = await axios.post("http://localhost:8000/login/", {
-        username: email,
+        username: username,
         password: password,
       });
-
+      setEmailError(false);
+      setPasswordError(false);
       // Store the access token in local storage
-      console.log(response.data);
       localStorage.setItem("token", response.data.access);
+      // Store UserData
+      saveUserDetail();
+      alert("Login successful!");
       // Redirect to the home page
       window.location.href = "/";
-    } catch (error) {
+    } catch (error: AxiosError) {
       // Log any errors that occur during the login process
       console.error(error);
+      // Display an error message to the user
+      if (error.response.status === 401) {
+        setEmailError(true);
+        setPasswordError(true);
+        setEmailErrorMessage("Invalid email or Password");
+      }
     }
   };
 
@@ -77,11 +116,6 @@ export default function SignIn() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (validateInputs()) {
-      const data = new FormData(event.currentTarget);
-      console.log({
-        email: data.get("email"),
-        password: data.get("password"),
-      });
       handleLogin();
     }
   };
@@ -211,11 +245,7 @@ export default function SignIn() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
-            {/* Remember me checkbox */}
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             {/* Forgot password modal */}
             <ForgotPassword open={open} handleClose={handleClose} />
             {/* Sign in button */}

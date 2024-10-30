@@ -1,4 +1,3 @@
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from 'react-router-dom';
 
 /**
@@ -50,7 +49,9 @@ const HomePage = () => {
           <div className="row">
             <div className="col-md-4 feature" style={{ padding: '20px' }}>
               <i className="fas fa-link" style={{ fontSize: '3em', marginBottom: '15px' }}></i>
-              <h3>Create LinkTrees</h3>
+              <h3>Create LinkTrees
+                <a href='/linktree/create'> Now</a>
+              </h3>
               <p>Easily create and manage collections of links to share with your audience.</p>
             </div>
             <div className="col-md-4 feature" style={{ padding: '20px' }}>
